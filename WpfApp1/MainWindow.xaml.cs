@@ -23,8 +23,10 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-            Main ps = new Main();
-            ps.main();
+            Parser ps = new Parser();
+            ps.Url = @"https://readmanga.live/";
+            ps.Parse();
+            MessageBox.Show(ps.Author);
         }
     }
 }
