@@ -23,9 +23,9 @@ namespace WpfApp1
         public int ReleaseYear { set; get; }
         public static List<String> Genres = new List<string>();
         public ICollection<IWebElement> PageUrl { set; get; }
-        public void Parse()
-        {
 
+        public void ParserInit()
+        {
             var options = new EdgeOptions();
             options.UseChromium = true;
             using (IWebDriver driver = new EdgeDriver(options))
@@ -40,7 +40,15 @@ namespace WpfApp1
                     MangaUrl.Add(mgurl.GetAttribute("href"));
                 }
             }
-
+        }
+        public int GetUrlVolume()
+        {
+            return (int)MangaUrl.Count;
+        }
+        public void Parse()
+        {
+            var options = new EdgeOptions();
+            options.UseChromium = true;
             using (IWebDriver drv = new EdgeDriver(options))
             {
                 WebDriverWait Wait = new WebDriverWait(drv, TimeSpan.FromSeconds(30));
@@ -48,7 +56,15 @@ namespace WpfApp1
                 {
                     drv.Navigate().GoToUrl(item); //переход на страницу с конкретной мангой
                     BackgroundImg = drv.FindElements(By.XPath(@"//img[@class='fotorama__img']"))[0].GetAttribute("src"); //получение задней картины
-                    NumberVolumes = int.Parse(Regex.Replace(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']/p[1]")).Text, @"Томов: ", "")); //получение кол-ва глав
+                    try
+                    {
+                        NumberVolumes = int.Parse(Regex.Replace(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']/p[1]")).Text, @"Томов: ", "")); //получение кол-ва глав
+                    }
+                    catch(Exception e)
+                    {
+                        
+                    }
+                    
                     TranslateStatus = Regex.Replace(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']/p[2]")).Text, @"Перевод: ", ""); //получение статуса перевода
                     ReleaseYear = int.Parse(drv.FindElement(By.XPath(@"//span[@class='elem_year ']/a")).Text); //получение года выпуска
                     ICollection<IWebElement> genres = drv.FindElements(By.XPath(@"//span[@class='elem_genre ']/a")); //подготовка данных к заненсению в список Genres
@@ -60,6 +76,7 @@ namespace WpfApp1
                     Description = drv.FindElement(By.XPath(@"//div[@class='manga-description']")).Text; //получение описания
                 }
             }
+            
 
         }
 
