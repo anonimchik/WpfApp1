@@ -20,7 +20,9 @@ namespace WpfApp1
         public int NumberVolumes { set; get; }
         public string TranslateStatus { set; get; }
         public string Author { set; get; }
+        public List<String> Chapters = new List<String>();
         public int ReleaseYear { set; get; }
+
         public static List<String> Genres = new List<string>();
         public ICollection<IWebElement> PageUrl { set; get; }
 
@@ -55,29 +57,54 @@ namespace WpfApp1
                 foreach (var item in MangaUrl)
                 {
                     drv.Navigate().GoToUrl(item); //переход на страницу с конкретной мангой
-                    BackgroundImg = drv.FindElements(By.XPath(@"//img[@class='fotorama__img']"))[0].GetAttribute("src"); //получение задней картины
-                    try
+                    if(Regex.IsMatch(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']")).Text, "Информация о манге"))
                     {
-                        NumberVolumes = int.Parse(Regex.Replace(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']/p[1]")).Text, @"Томов: ", "")); //получение кол-ва глав
+                        BackgroundImg = drv.FindElements(By.XPath(@"//img[@class='fotorama__img']"))[0].GetAttribute("src"); //получение задней картины
+                        try
+                        {
+                            NumberVolumes = int.Parse(Regex.Replace(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']/p[1]")).Text, @"Томов: ", "")); //получение кол-ва глав
+                        }
+                        catch (Exception e) { }
+
+                        try
+                        {
+                            TranslateStatus = Regex.Replace(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']/p[2]")).Text, @"Перевод: ", ""); //получение статуса перевода
+                        }
+                        catch(Exception e) { }
+
+                        try
+                        {
+                            ReleaseYear = int.Parse(drv.FindElement(By.XPath(@"//span[@class='elem_year ']/a")).Text); //получение года выпуска
+                        }
+                        catch (Exception e) { }
+
+                        ICollection<IWebElement> genres = drv.FindElements(By.XPath(@"//span[@class='elem_genre ']/a")); //подготовка данных к заненсению в список Genres
+                        foreach (var gnrs in genres) //запись данных в список Genres
+                        {
+                            Genres.Add(gnrs.Text);
+                        }
+                        try
+                        {
+                            Author = drv.FindElement(By.XPath(@"//span[@class='elem_author ']/a")).Text; //получение автора
+                        }
+                        catch (Exception e) { }
+
+                        try
+                        {
+                            Description = drv.FindElement(By.XPath(@"//div[@class='manga-description']")).Text; //получение описания
+                        }
+                        catch (Exception e) { }
+
+                        ICollection<IWebElement> chapter = drv.FindElements(By.XPath(@"//a[@class='cp-l']")); //получение ссылок на главы
+                        foreach(var ch in chapter)
+                        {
+                            Chapters.Add(ch.GetAttribute("href")+"|"+ch.Text);
+                        }
                     }
-                    catch(Exception e)
-                    {
-                        
-                    }
-                    
-                    TranslateStatus = Regex.Replace(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']/p[2]")).Text, @"Перевод: ", ""); //получение статуса перевода
-                    ReleaseYear = int.Parse(drv.FindElement(By.XPath(@"//span[@class='elem_year ']/a")).Text); //получение года выпуска
-                    ICollection<IWebElement> genres = drv.FindElements(By.XPath(@"//span[@class='elem_genre ']/a")); //подготовка данных к заненсению в список Genres
-                    foreach  (var gnrs in genres) //запись данных в список Genres
-                    {
-                        Genres.Add(gnrs.Text);
-                    }
-                    Author = drv.FindElement(By.XPath(@"//span[@class='elem_author ']/a")).Text; //получение автора
-                    Description = drv.FindElement(By.XPath(@"//div[@class='manga-description']")).Text; //получение описания
+                   
                 }
             }
             
-
         }
 
     }

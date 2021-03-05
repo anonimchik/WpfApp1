@@ -31,7 +31,9 @@ namespace WpfApp1
                 Parser ps = new Parser();
                 ps.Url = @"https://readmanga.live/";
                 ps.Parse();
+
             }
+            
         }
     }
 }
