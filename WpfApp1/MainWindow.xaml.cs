@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OpenQA.Selenium;
+using Microsoft.Edge.SeleniumTools;
+using OpenQA.Selenium.Support.UI;
 
 namespace WpfApp1
 {
@@ -23,15 +26,22 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-            Parser ps1 = new Parser();
-            ps1.Url = @"https://readmanga.live/";
-            ps1.ParserInit();
-            for (int i = 0; i < ps1.GetUrlVolume(); i++)
+            Parser ps = new Parser();
+            ps.SetMainUrl("https://readmanga.live/");
+            ps.SetQuery("Наруто");
+            Manga mg = new Manga();
+            var options = new EdgeOptions();
+            options.UseChromium = true;
+            using (IWebDriver driver = new EdgeDriver(options))
             {
-                Parser ps = new Parser();
-                ps.Url = @"https://readmanga.live/";
-                ps.Parse();
+                mg.ParserInit(driver, ps);
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                for (int i = 0; i < mg.GetUrlVolume(ps); i++)
+                {
+                    ps.SetMainUrl("https://readmanga.live/");
+                    mg.Parse(ps.GetMangaUrl()[i], driver, ps);
 
+                }
             }
             
         }
