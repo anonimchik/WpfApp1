@@ -23,6 +23,7 @@ namespace WpfApp1
         public int ReleaseYear { set; get; }
 
         public static List<String> Genres = new List<string>();
+        public Manga[] manga;
 
         //public List<Manga> manga = new List<Manga>();
         

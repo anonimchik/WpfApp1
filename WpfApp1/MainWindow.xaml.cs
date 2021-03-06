@@ -23,6 +23,7 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Manga mangas;
         public MainWindow()
         {
             InitializeComponent();
@@ -30,6 +31,12 @@ namespace WpfApp1
             ps.SetMainUrl("https://readmanga.live/");
             ps.SetQuery("Наруто");
             Manga mg = new Manga();
+            mangas.manga = new Manga[2];
+            for (int i = 0; i < 2; i++)
+            {
+                mangas.manga[i].BackgroundImg = i.ToString();
+                manga[i].Description = i.ToString();
+            }
             var options = new EdgeOptions();
             options.UseChromium = true;
             using (IWebDriver driver = new EdgeDriver(options))

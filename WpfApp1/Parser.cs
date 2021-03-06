@@ -41,12 +41,7 @@ namespace WpfApp1
         }     
         public void setManga()
         {
-            Manga[] manga = new Manga[2];
-            for (int i = 0; i < 2; i++)
-            {
-                manga[i].BackgroundImg = i.ToString();
-                manga[i].Description = i.ToString();
-            }
+           
         }
     }
 }
