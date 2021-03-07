@@ -23,32 +23,28 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Manga mangas;
         public MainWindow()
         {
             InitializeComponent();
-            Parser ps = new Parser();
-            ps.SetMainUrl("https://readmanga.live/");
-            ps.SetQuery("Наруто");
-            Manga mg = new Manga();
-            mangas.manga = new Manga[2];
-            for (int i = 0; i < 2; i++)
+            Parser ps = new Parser(); //создание объекта класса
+            ps.SetMainUrl("https://readmanga.live/"); //ссылка
+            ps.SetQuery("Наруто"); //запрос
+            Manga mg = new Manga(); //создание объекта класса
+            var options = new EdgeOptions(); //задание опции для edge
+            options.UseChromium = true; //активация хромиума
+            using (IWebDriver driver = new EdgeDriver(options)) //запуск дравйвера edge
             {
-                mangas.manga[i].BackgroundImg = i.ToString();
-                manga[i].Description = i.ToString();
-            }
-            var options = new EdgeOptions();
-            options.UseChromium = true;
-            using (IWebDriver driver = new EdgeDriver(options))
-            {
-                mg.ParserInit(driver, ps);
-                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-                for (int i = 0; i < mg.GetUrlVolume(ps); i++)
+                List<Manga> MangaList = new List<Manga>(); //создание списка
+                mg.ParserInit(driver, ps); //первичная инициализация
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)); //задание задержки
+                for (int i = 0; i < mg.GetUrlVolume(ps); i++) //парсинг данных
                 {
-                    ps.SetMainUrl("https://readmanga.live/");
-                    mg.Parse(ps.GetMangaUrl()[i], driver, ps);
-
+                    Manga mng = new Manga(); //обнуленеие объекта
+                    MangaList.Add(mng); //запись данных класса в список
+                    ps.SetMainUrl("https://readmanga.live/"); //ввод ссылки
+                    mng.Parse(ps.GetMangaUrl()[i], driver, ps); //парсинг данных
                 }
+                
             }
             
         }

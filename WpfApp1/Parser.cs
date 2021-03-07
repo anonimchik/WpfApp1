@@ -23,9 +23,9 @@ namespace WpfApp1
         {
             return MainUrl;
         }
-        public void SetMangaUrl(List<String> mangaUrl) 
+        public void SetMangaUrl(string mangaUrl) 
         {
-            MangaUrl = mangaUrl;
+            MangaUrl.Add(mangaUrl);
         }
         public List<String> GetMangaUrl()
         {
