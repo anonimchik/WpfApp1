@@ -39,11 +39,16 @@ namespace WpfApp1
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)); //задание задержки
                 for (int i = 0; i < mg.GetUrlVolume(ps); i++) //парсинг данных
                 {
-                    Manga mng = new Manga(); //обнуленеие объекта
+                    Manga mng = new Manga(); //обнуление объекта
                     MangaList.Add(mng); //запись данных класса в список
                     ps.SetMainUrl("https://readmanga.live/"); //ввод ссылки
-                    mng.Parse(ps.GetMangaUrl()[i], driver, ps); //парсинг данных
+                    mng.ParseMainInfo(ps.GetMangaUrl()[i], driver, ps); //парсинг данных
+                    foreach (var chapter in mng.Chapters)
+                    {
+                        mng.parseImages(chapter, driver);
+                    }
                 }
+       
                 
             }
             

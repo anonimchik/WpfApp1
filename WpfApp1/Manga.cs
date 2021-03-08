@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
@@ -20,8 +19,10 @@ namespace WpfApp1
         public List<String> Chapters = new List<String>();
         public int ReleaseYear { set; get; }
 
-        public List<String> Genres = new List<string>();
+        public List<String> Genres = new List<String>();
+        public int PagesCount { set; get; }
 
+        public List<String> Image = new List<string>(); 
         public void ParserInit(IWebDriver driver, Parser ps)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
@@ -39,14 +40,19 @@ namespace WpfApp1
         {
             return (int)ps.GetMangaUrl().Count;
         }
-        public void Parse(string url, IWebDriver drv, Parser ps)
+        public void ParseMainInfo(string url, IWebDriver drv, Parser ps)
         {
             drv.Navigate().GoToUrl(url); //переход на страницу с конкретной мангой
             if (Regex.IsMatch(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']")).Text, "Информация о манге")) //поиск только манг
             {
                 Title = drv.FindElement(By.XPath(@"//span[@class='name']")).Text; //название манги
                 BackgroundImg = drv.FindElements(By.XPath(@"//img[@class='fotorama__img']"))[0].GetAttribute("src"); //получение задней картины
-                NumberChapters =int.Parse(drv.FindElement(By.XPath(@"//div[@class='flex-row']/div[2]/h4/a")).Text.Substring(drv.FindElement(By.XPath(@"//div[@class='flex-row']/div[2]/h4/a")).Text.LastIndexOf(" ") + 1, drv.FindElement(By.XPath(@"//div[@class='flex-row']/div[2]/h4/a")).Text.Length - drv.FindElement(By.XPath(@"//div[@class='flex-row']/div[2]/h4/a")).Text.LastIndexOf(" ") - 1)); //количество глав
+                try 
+                {
+                    NumberChapters = int.Parse(drv.FindElement(By.XPath(@"//div[@class='flex-row']/div[2]/h4/a")).Text.Substring(drv.FindElement(By.XPath(@"//div[@class='flex-row']/div[2]/h4/a")).Text.LastIndexOf(" ") + 1, drv.FindElement(By.XPath(@"//div[@class='flex-row']/div[2]/h4/a")).Text.Length - drv.FindElement(By.XPath(@"//div[@class='flex-row']/div[2]/h4/a")).Text.LastIndexOf(" ") - 1)); //количество глав
+                }
+                catch(Exception e) { }
+
                 try
                 {
                     NumberVolumes = int.Parse(Regex.Replace(drv.FindElement(By.XPath(@"//div[@class='subject-meta col-sm-7']/p[1]")).Text, @"Томов: ", "")); //получение кол-ва глав
@@ -92,5 +98,17 @@ namespace WpfApp1
             
         }
 
+        public void parseImages(string chapter, IWebDriver drv)
+        {
+            drv.Navigate().GoToUrl(chapter.Substring(0, chapter.IndexOf("|")));
+            int LastPage = int.Parse(drv.FindElement(By.XPath(@"//span[@class='pages-count']")).Text)-1;
+            for (int i = 0; i <= LastPage; i++)
+            {
+                drv.Navigate().GoToUrl(chapter.Substring(0, chapter.IndexOf("|")) + "#page="+i);
+                drv.Navigate().Refresh();
+                Image.Add(drv.FindElement(By.XPath(@"//img[@id='mangaPicture']")).GetAttribute("src"));
+            }
+            
+        }
     }
 }
