@@ -28,18 +28,22 @@ namespace WpfApp1
         {
             InitializeComponent();
             Parser ps = new Parser(); //создание объекта класса
-            ps.SetMainUrl("https://readmanga.live/list"); //ссылка для получения полного списка манги
-            Manga mg = new Manga(); //создание объекта mg класса Manga
+            ps.SetMainUrl("https://readmanga.live/"); //ссылка для получения полного списка манги
+           // Manga mg = new Manga(); //создание объекта mg класса Manga
+            /*
             var options = new EdgeOptions();
             options.UseChromium = true;
+            
             using (IWebDriver driver = new EdgeDriver(options))
             {
-                /*  |Получение полного списка манги|  */
+                
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
                 mg.ParseFullListManga(driver, ps.GetMainUrl());
             }
+            */
+        
                 
-            /*
+            
             ps.SetQuery("Наруто"); //запрос
             Manga mg = new Manga(); //создание объекта класса
             var options = new EdgeOptions(); //задание опции для edge
@@ -65,7 +69,7 @@ namespace WpfApp1
                
                 
             }
-            */
+            
             
         }
     }

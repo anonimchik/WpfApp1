@@ -116,6 +116,7 @@ namespace WpfApp1
         /// </summary>
         /// <param name="drv">Объект driver интерфейса IWebDriver</param>
         /// <param name="url">Результат выполнения метода GetMainUrl класса Parser</param>
+        /// <
         public void ParseFullListManga(IWebDriver drv, string url)
         {
             drv.Navigate().GoToUrl(url); //переход на сайт 
