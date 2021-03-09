@@ -108,7 +108,35 @@ namespace WpfApp1
                 drv.Navigate().Refresh();
                 Image.Add(drv.FindElement(By.XPath(@"//img[@id='mangaPicture']")).GetAttribute("src"));
             }
-            
+           
+        }
+
+        /// <summary>
+        /// Функция для парсинга всего списка манга на странице https://readmanga.live/list
+        /// </summary>
+        /// <param name="drv">Объект driver интерфейса IWebDriver</param>
+        /// <param name="url">Результат выполнения метода GetMainUrl класса Parser</param>
+        public void ParseFullListManga(IWebDriver drv, string url)
+        {
+            drv.Navigate().GoToUrl(url); //переход на сайт 
+
+            /*  |обработка при наличии кнопки далее|  */
+            if (drv.FindElements(By.XPath(@"//a[@class='nextLink']")).Count > 0) 
+            {
+                ICollection<IWebElement> pages = drv.FindElements(By.XPath(@"//span[@class='step']"));
+            }
+
+            /*  |обработка при наличии кнопки назад|  */
+            if (drv.FindElements(By.XPath(@"//a[@class='prevLink']")).Count > 0) 
+            {
+
+            }
+
+            /*  |обработка при наличии кнопки далее и назад|  */
+            if (drv.FindElements(By.XPath(@"//a[@class='nextLink']")).Count > 0 && drv.FindElements(By.XPath(@"//a[@class='prevLink']")).Count > 0) 
+            {
+
+            }
         }
     }
 }

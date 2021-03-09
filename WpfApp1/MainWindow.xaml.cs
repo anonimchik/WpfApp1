@@ -15,19 +15,31 @@ using System.Windows.Shapes;
 using OpenQA.Selenium;
 using Microsoft.Edge.SeleniumTools;
 using OpenQA.Selenium.Support.UI;
+using MahApps.Metro.Controls;
 
 namespace WpfApp1
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow 
     {
         public MainWindow()
         {
             InitializeComponent();
             Parser ps = new Parser(); //создание объекта класса
-            ps.SetMainUrl("https://readmanga.live/"); //ссылка
+            ps.SetMainUrl("https://readmanga.live/list"); //ссылка для получения полного списка манги
+            Manga mg = new Manga(); //создание объекта mg класса Manga
+            var options = new EdgeOptions();
+            options.UseChromium = true;
+            using (IWebDriver driver = new EdgeDriver(options))
+            {
+                /*  |Получение полного списка манги|  */
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                mg.ParseFullListManga(driver, ps.GetMainUrl());
+            }
+                
+            /*
             ps.SetQuery("Наруто"); //запрос
             Manga mg = new Manga(); //создание объекта класса
             var options = new EdgeOptions(); //задание опции для edge
@@ -37,6 +49,8 @@ namespace WpfApp1
                 List<Manga> MangaList = new List<Manga>(); //создание списка
                 mg.ParserInit(driver, ps); //первичная инициализация
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)); //задание задержки
+
+               
                 for (int i = 0; i < mg.GetUrlVolume(ps); i++) //парсинг данных
                 {
                     Manga mng = new Manga(); //обнуление объекта
@@ -48,9 +62,10 @@ namespace WpfApp1
                         mng.parseImages(chapter, driver);
                     }
                 }
-       
+               
                 
             }
+            */
             
         }
     }
